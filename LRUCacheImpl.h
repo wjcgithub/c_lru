@@ -17,7 +17,7 @@ typedef struct cacheEntryS{
 //定义LRU缓存
 typedef struct LRUCacheS{
     int cacheCapacity;         //缓存的容量
-    cacheEntryS **hashMap      //缓存的哈希表
+    cacheEntryS **hashMap;      //缓存的哈希表
 
     cacheEntryS *lruListHead;  //缓存双向链表表头
     cacheEntryS *lruListTail;  //缓存双向链表表尾

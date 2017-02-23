@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1487759683 source:/home/c/lru/lru/main.c
+1487815719 source:/home/c/lru/lru/main.c
 	<stdio.h>
 	<stdlib.h>
 	"LRUCache.h"

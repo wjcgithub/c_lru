@@ -34,7 +34,7 @@ void testcase1(void)
     fprintf(stdout, "In testcase1....\n");
     fprintf(stdout, "=========================\n");
 
-    void *lruCache;
+    void *lruCache = NULL;
     if ( 0 != LRUCacheCreate(5, &lruCache) )
         HANDLE_ERROR("LRUCacheCreate");
 
@@ -58,8 +58,8 @@ void testcase1(void)
     LRUCachePrint(lruCache); /*FAEDC*/
 
     /*B!*/
-    LRUCACHE_PUTDATA(lruCache, 'F');
-    LRUCACHE_GETDATA(lruCache, 'F');
+    LRUCACHE_PUTDATA(lruCache, 'B');
+    LRUCACHE_GETDATA(lruCache, 'B');
     LRUCachePrint(lruCache); /*BFAED*/
 
     if (0 != LRUCacheDestory(lruCache))
@@ -68,8 +68,105 @@ void testcase1(void)
     fprintf(stdout, "=========================\n\n");
 }
 
+/*测试用例2*/
+void testcase2(void)
+{
+    fprintf(stdout, "=========================\n");
+    fprintf(stdout, "In testcase2....\n");
+    fprintf(stdout, "=========================\n");
+    void *lruCache = NULL;
+    if (0 != LRUCacheCreate(3, &lruCache))
+        HANDLE_ERROR("LRUCacheCreate");
+
+    /*WXWYZ!*/
+    LRUCACHE_PUTDATA(lruCache, 'W');
+    LRUCACHE_PUTDATA(lruCache, 'X');
+    LRUCACHE_PUTDATA(lruCache, 'W');
+    LRUCACHE_PUTDATA(lruCache, 'Y');
+    LRUCACHE_PUTDATA(lruCache, 'Z');
+    LRUCachePrint(lruCache);/*ZYW*/
+
+    LRUCACHE_GETDATA(lruCache, 'Z');
+    LRUCACHE_GETDATA(lruCache, 'Y');
+    LRUCACHE_GETDATA(lruCache, 'W');
+    LRUCACHE_GETDATA(lruCache, 'X');
+    LRUCACHE_GETDATA(lruCache, 'W');
+    LRUCachePrint(lruCache);/*WYZ*/
+
+    /*YZWYX!*/
+    LRUCACHE_PUTDATA(lruCache, 'Y');
+    LRUCACHE_PUTDATA(lruCache, 'Z');
+    LRUCACHE_PUTDATA(lruCache, 'W');
+    LRUCACHE_PUTDATA(lruCache, 'Y');
+    LRUCACHE_PUTDATA(lruCache, 'X');
+    LRUCachePrint(lruCache); /*XYW*/
+
+
+    LRUCACHE_GETDATA(lruCache, 'X');
+    LRUCACHE_GETDATA(lruCache, 'Y');
+    LRUCACHE_GETDATA(lruCache, 'W');
+    LRUCACHE_GETDATA(lruCache, 'Z');
+    LRUCACHE_GETDATA(lruCache, 'Y');
+    LRUCachePrint(lruCache); /*WYX*/
+
+    /*XYXY!*/
+    LRUCACHE_PUTDATA(lruCache, 'X');
+    LRUCACHE_PUTDATA(lruCache, 'Y');
+    LRUCACHE_PUTDATA(lruCache, 'X');
+    LRUCACHE_PUTDATA(lruCache, 'Y');
+    LRUCachePrint(lruCache);/*YX*/
+
+    LRUCACHE_GETDATA(lruCache, 'Y');
+    LRUCACHE_GETDATA(lruCache, 'X');
+    LRUCACHE_GETDATA(lruCache, 'Y');
+    LRUCACHE_GETDATA(lruCache, 'X');
+    LRUCachePrint(lruCache); /*XY*/
+
+    if (0 != LRUCacheDestory(lruCache))
+        HANDLE_ERROR("LRUCacheDestory");
+    fprintf(stdout, "\n\ntestcase2 finished\n");
+    fprintf(stdout, "=========================\n\n");
+}
+
+/*测试用例3*/
+void testcase3(void)
+{
+    fprintf(stdout, "=========================\n");
+    fprintf(stdout, "In testcase3....\n");
+    fprintf(stdout, "=========================\n");
+
+    void *lruCache;
+    if (0 != LRUCacheCreate(5, &lruCache))
+        HANDLE_ERROR("LRUCacheCreate");
+
+    /*EIEIO!*/
+    LRUCACHE_PUTDATA(lruCache, 'E');
+    LRUCACHE_PUTDATA(lruCache, 'I');
+    LRUCACHE_PUTDATA(lruCache, 'E');
+    LRUCACHE_PUTDATA(lruCache, 'I');
+    LRUCACHE_PUTDATA(lruCache, 'O');
+    LRUCachePrint(lruCache);/*OIE*/
+
+
+     LRUCACHE_GETDATA(lruCache, 'A');
+    LRUCACHE_GETDATA(lruCache, 'I');
+    LRUCACHE_GETDATA(lruCache, 'B');
+    LRUCACHE_GETDATA(lruCache, 'O');
+    LRUCACHE_GETDATA(lruCache, 'C');
+    LRUCACHE_PUTDATA(lruCache, 'E');
+    LRUCachePrint(lruCache); /*EOI*/
+
+    if (0 != LRUCacheDestory(lruCache))
+        HANDLE_ERROR("LRUCacheDestory");
+    fprintf(stdout, "\n\ntestcase3 finished\n");
+    fprintf(stdout, "=========================\n\n");
+}
+
+/*测试用例入口函数*/
 int main()
 {
     testcase1();
+    testcase2();
+//    testcase3();
     return 0;
 }

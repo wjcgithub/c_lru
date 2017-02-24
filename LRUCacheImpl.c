@@ -32,6 +32,7 @@ static void freeCacheEntry(cacheEntryS* entry)
 int LRUCacheCreate(int capacity, void **lruCache)
 {
     LRUCacheS *cache = NULL;
+
     if ( NULL == (cache=malloc(sizeof(*cache))) ) {
         perror("malloc");
         return -1;
@@ -228,6 +229,7 @@ static void removeEntryFromHashMap(LRUCacheS *cache, cacheEntryS *entry)
 /* *******************************************************
 * 缓存操作接口及实现
 ******************************************************* */
+//将数据放入LRU缓存中
 int LRUCacheSet(void *lruCache, char key, char data)
 {
     LRUCacheS *cache = (LRUCacheS *)lruCache;
@@ -243,8 +245,8 @@ int LRUCacheSet(void *lruCache, char key, char data)
         entry = newCacheEntry(key, data);
 
         //将新建缓存单元插入链表表头
-        cacheEntryS *removeEntry = insertToListHead(cache, entry);
-        if (NULL != removeEntry) {
+        cacheEntryS *removedEntry = insertToListHead(cache, entry);
+        if (NULL != removedEntry) {
             //新建缓存单元过程中, 发生缓存满了的情况, 需要淘汰最久没有被访问到的缓存数据单元
             removeEntryFromHashMap(cache, removedEntry);
             freeCacheEntry(removedEntry);
@@ -255,4 +257,36 @@ int LRUCacheSet(void *lruCache, char key, char data)
     }
 
     return 0;
+}
+
+//从LRU缓存中获取数据
+char LRUCacheGet(void *lruCache, char key)
+{
+    LRUCacheS *cache = (LRUCacheS *)lruCache;
+    //从哈希表中查找是否已经在缓存中
+    cacheEntryS *entry = getValueFromHashMap(cache, key);
+    if (NULL != entry) {
+        //缓存中存在该数据, 更新至链表表头
+        updateLRUList(cache, entry);
+        //返回数据
+        return entry->data;
+    } else {
+        //缓存中不存在该数据
+        return "\0";
+    }
+}
+
+//遍历缓存链表,打印缓存中的数据, 按访问时间从新到旧的顺序输出
+void LRUCachePrint(void *lruCache)
+{
+    LRUCacheS *cache = (LRUCacheS *)lruCache;
+    if (NULL == cache || 0 == cache->lruListSize) return ;
+    fprintf(stdout, "\n>>>>>>>>>>>>>>>>>>>>>>>>\n");
+    fprintf(stdout, "\ncache (key data):\n");
+    cacheEntryS *entry = cache->lruListHead;
+    while (entry) {
+        fprintf(stdout, "(%c, %c)", entry->key, entry->data);
+        entry = entry->lruListNext;
+    }
+    fprintf(stdout, "\n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n\n");
 }

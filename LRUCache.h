@@ -11,8 +11,8 @@ int LRUCacheDestory(void *lruCache);
 //将数据放入LRU缓存中
 int LRUCacheSet(void *lruCache, char key, char data);
 //从缓存中获取数据
-int LRUCacheGet(void *lruCache, char key);
+char LRUCacheGet(void *lruCache, char key);
 //打印缓存中的数据,按照访问时间从新到旧的顺序输出
-int LRUCachePrint(void *lruCache);
+void LRUCachePrint(void *lruCache);
 
 #endif // LRUCACHE_H_INCLUDED
